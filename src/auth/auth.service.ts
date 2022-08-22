@@ -3,6 +3,7 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { isValidPassword, transformPassword } from '../app/util/crypto';
 import { User } from '../user/user.entity';
+import { AuthProvider } from '../user/user.constant';
 
 @Injectable()
 export class AuthService {
@@ -11,17 +12,23 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<User | null> {
-    const user = await this.userService.findOne(username);
-
+  async validateUser(
+    provider: AuthProvider,
+    email: string,
+    password: string,
+  ): Promise<User | null> {
+    const user = await this.userService.findOne(provider, email);
     if (user) {
-      const validatePassword = await isValidPassword(password, user.password);
-      if (validatePassword) {
-        return user;
-      } else {
-        // password error
-        return null;
+      if (provider == AuthProvider.LOCAL) {
+        const validatePassword = await isValidPassword(password, user.password);
+        if (validatePassword) {
+          return user;
+        } else {
+          // password error
+          return null;
+        }
       }
+      return user;
     }
     // not found user
     return null;
@@ -34,10 +41,15 @@ export class AuthService {
     };
   }
 
-  async signup(username: string, password: string): Promise<boolean> {
-    const existtUser = await this.userService.findOne(username);
+  async signup(
+    provider: AuthProvider,
+    email: string,
+    name: string,
+    password: string,
+  ): Promise<boolean> {
+    const existUser = await this.userService.findOne(provider, email);
 
-    if (existtUser) {
+    if (existUser) {
       // Error: Already exist name
 
       throw new Error('');
@@ -47,7 +59,12 @@ export class AuthService {
 
     const encryptPassword = await transformPassword(password);
 
-    const user = await this.userService.createOne(username, encryptPassword);
+    const user = await this.userService.createOne(
+      provider,
+      email,
+      name,
+      encryptPassword,
+    );
 
     if (user) {
       return true;

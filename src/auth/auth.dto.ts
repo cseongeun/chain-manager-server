@@ -1,4 +1,5 @@
-import { IsString } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
+import { AuthProvider } from '../user/user.constant';
 import { User } from '../user/user.entity';
 
 export class SignInDTO {
@@ -6,8 +7,14 @@ export class SignInDTO {
 }
 
 export class SignUpDTO {
+  @IsEnum(AuthProvider)
+  provider: AuthProvider;
+
   @IsString()
-  username: string;
+  email: string;
+
+  @IsString()
+  name: string;
 
   @IsString()
   password: string;
