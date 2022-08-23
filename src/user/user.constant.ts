@@ -5,3 +5,9 @@ export enum AuthProvider {
   GOOGLE = 'google',
   GITHUB = 'github',
 }
+
+export const ROUTE = {
+  ROOT: 'user',
+
+  PROFILE: 'profile',
+};

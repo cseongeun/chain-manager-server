@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { isValidPassword, transformPassword } from '../app/util/crypto';
 import { User } from '../user/user.entity';
 import { AuthProvider } from '../user/user.constant';
+import { IUserSignIn } from './auth.interface';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +19,7 @@ export class AuthService {
     password: string,
   ): Promise<User | null> {
     const user = await this.userService.findOne(provider, email);
+
     if (user) {
       if (provider == AuthProvider.LOCAL) {
         const validatePassword = await isValidPassword(password, user.password);
@@ -30,14 +32,16 @@ export class AuthService {
       }
       return user;
     }
+
     // not found user
     return null;
   }
 
-  async signin(user: User) {
-    const payload = { username: user.name, id: user.id };
+  async signin(user: User): Promise<IUserSignIn> {
+    const payload = { username: user.name, userId: user.id };
     return {
-      access_token: this.jwtService.sign(payload),
+      ...user,
+      accessToken: this.jwtService.sign(payload),
     };
   }
 
@@ -46,7 +50,7 @@ export class AuthService {
     email: string,
     name: string,
     password: string,
-  ): Promise<boolean> {
+  ): Promise<User> {
     const existUser = await this.userService.findOne(provider, email);
 
     if (existUser) {
@@ -57,7 +61,10 @@ export class AuthService {
 
     // 비밀번호 조건 확인
 
-    const encryptPassword = await transformPassword(password);
+    let encryptPassword = null;
+    if (provider == AuthProvider.LOCAL) {
+      encryptPassword = await transformPassword(password);
+    }
 
     const user = await this.userService.createOne(
       provider,
@@ -66,10 +73,6 @@ export class AuthService {
       encryptPassword,
     );
 
-    if (user) {
-      return true;
-    }
-
-    return false;
+    return user;
   }
 }
