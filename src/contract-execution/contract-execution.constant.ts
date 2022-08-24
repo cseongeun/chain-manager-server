@@ -3,4 +3,6 @@ export const CONTRACT_EXECUTION_REPOSITORY_PROVIDE =
 
 export const ROUTE = {
   ROOT: 'contract/execution',
+
+  GET_DETAIL: ':id',
 };

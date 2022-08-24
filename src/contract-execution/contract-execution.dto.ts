@@ -8,10 +8,18 @@ import { DataTransporter } from '../app/decorator/dto-transporter.decorator';
 import { NetworkDTO } from '../network/network.dto';
 import { ContractExecution } from './contract-execution.entity';
 
+export class ContractExecutionDetailParamDTO {
+  @DataTransporter({
+    doc: { description: '컨트랙트 익스큐션 아이디' },
+    props: [IsString()],
+  })
+  id: string;
+}
+
 export class ContractExecutionQueryDTO {
   @DataTransporter({
     doc: { description: '네트워크 체인 아이디' },
-    props: [IsNumberString(), IsOptional()],
+    props: [IsNumber(), IsOptional()],
   })
   chainId?: number;
 
@@ -31,7 +39,7 @@ export class ContractExecutionQueryDTO {
 export class CreateContractExecutionBodyDTO {
   @DataTransporter({
     doc: { description: '네트워크 체인 아이디' },
-    props: [IsNumberString()],
+    props: [IsNumber()],
   })
   public readonly chainId: number;
 

@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Post,
   Query,
   Request,
@@ -17,6 +18,7 @@ import { Network } from '../network/network.entity';
 import { NetworkService } from '../network/network.service';
 import { ROUTE } from './contract-execution.constant';
 import {
+  ContractExecutionDetailParamDTO,
   ContractExecutionDTO,
   ContractExecutionQueryDTO,
   CreateContractExecutionBodyDTO,
@@ -29,6 +31,22 @@ export class ContractExecutionController {
     private readonly contractExecutionService: ContractExecutionService,
     private readonly networkService: NetworkService,
   ) {}
+
+  @UseGuards(JwtAuthGuard)
+  @APIControllerExport(Get(ROUTE.GET_DETAIL))
+  async getContractExecution(
+    @Request() req: IJWTGuardRequest,
+    @Param() param: ContractExecutionDetailParamDTO,
+  ) {
+    const { id } = param;
+
+    const contractExecution = await this.contractExecutionService.findOne({
+      user: req.user,
+      id,
+    });
+
+    return new ContractExecutionDTO(contractExecution);
+  }
 
   @UseGuards(JwtAuthGuard)
   @APIControllerExport(Get())
@@ -74,7 +92,7 @@ export class ContractExecutionController {
     @Body() body: CreateContractExecutionBodyDTO,
   ) {
     const { chainId, name, address, abi } = body;
-    console.log(chainId);
+
     const network = await this.networkService.findOne({ chainId });
 
     if (!network) {
