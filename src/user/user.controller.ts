@@ -9,6 +9,7 @@ import {
 import { APIControllerExport } from '../app/decorator/controller-export.decorator';
 import { Exception } from '../app/exception/exception';
 import { EXCEPTION_CODE } from '../app/exception/exception.constant';
+import { IJWTGuardRequest } from '../auth/auth.interface';
 import { JwtAuthGuard } from '../auth/guard/jwt.guard';
 import { ROUTE } from './user.constant';
 import { UserDTO, UserQueryDTO } from './user.dto';
@@ -20,7 +21,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @APIControllerExport(Get(ROUTE.PROFILE))
-  async getProfile(@Request() req: any) {
+  async getProfile(@Request() req: IJWTGuardRequest) {
     return new UserDTO(req.user);
   }
 
@@ -28,7 +29,7 @@ export class UserController {
   async findUser(@Query() query: UserQueryDTO) {
     const { provider, email } = query;
 
-    const user = await this.userService.findOne(provider, email);
+    const user = await this.userService.findOne({ provider, email });
 
     return user ? new UserDTO(user) : null;
   }

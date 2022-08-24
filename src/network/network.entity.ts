@@ -8,11 +8,17 @@ export class Network {
   @Column({ type: 'varchar', length: 50, nullable: false })
   name: string;
 
+  @Column({ type: 'varchar', length: 100, nullable: false })
+  label: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: false })
+  currency: string;
+
   @Column({ type: 'integer', nullable: false })
   chainId: number;
 
   @Column({ type: 'boolean', nullable: false })
-  testnet: boolean;
+  testnet: number;
 
   @Column({ type: 'varchar', length: 100, nullable: false })
   multicall: string;

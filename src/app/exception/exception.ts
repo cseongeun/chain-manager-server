@@ -81,3 +81,12 @@ export class CustomAccessDeniedException extends Exception {
     super(EXCEPTION_CODE.ERR0005, HttpStatus.FORBIDDEN);
   }
 }
+
+/**
+ * 권한
+ */
+export class CustomUnAuthorizedException extends Exception {
+  constructor() {
+    super(EXCEPTION_CODE.ERR0008, HttpStatus.UNAUTHORIZED);
+  }
+}

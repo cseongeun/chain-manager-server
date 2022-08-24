@@ -3,6 +3,7 @@ import {
   Catch,
   ExceptionFilter,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import {
@@ -11,13 +12,12 @@ import {
   Exception,
   CustomValidationException,
   CustomAccessDeniedException,
+  CustomUnAuthorizedException,
 } from '../exception/exception';
 import { IExceptionResponse, IRequestAugmented } from '../app.interface';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
-  constructor() {}
-
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
@@ -25,6 +25,7 @@ export class AllExceptionFilter implements ExceptionFilter {
 
     let resData: Exception;
 
+    console.log(exception.constructor);
     switch (exception.constructor) {
       case Exception: {
         resData = exception as Exception;
@@ -40,6 +41,10 @@ export class AllExceptionFilter implements ExceptionFilter {
       }
       case NotFoundException: {
         resData = new CustomNotFoundException();
+        break;
+      }
+      case UnauthorizedException: {
+        resData = new CustomUnAuthorizedException();
         break;
       }
       default: {

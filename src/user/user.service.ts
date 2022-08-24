@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { AuthProvider, USER_REPOSITORY_PROVIDE } from './user.constant';
 import { User } from './user.entity';
 
@@ -10,12 +10,8 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
-  async findOneById(id: number): Promise<User> {
-    return this.userRepository.findOne({ where: { id } });
-  }
-
-  async findOne(provider: AuthProvider, email: string): Promise<User> {
-    return this.userRepository.findOne({ where: { provider, email } });
+  async findOne(params: DeepPartial<User>): Promise<User> {
+    return this.userRepository.findOne({ where: { ...params } });
   }
 
   async createOne(

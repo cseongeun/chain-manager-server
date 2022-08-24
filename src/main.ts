@@ -16,6 +16,7 @@ class BootStrap {
   async init() {
     this.app = await NestFactory.create(AppModule, { cors: true });
 
+    this.setCors();
     this.setContainer();
     this.setDoc();
     this.setGlobalPipe();
@@ -24,6 +25,10 @@ class BootStrap {
 
   async run() {
     await this.app.listen(8000);
+  }
+
+  setCors() {
+    this.app.enableCors();
   }
 
   setContainer() {

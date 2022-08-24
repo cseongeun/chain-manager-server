@@ -7,9 +7,10 @@ import { RequestMiddleware } from './app/middleware/request.middleware';
 import { AuthModule } from './auth/auth.module';
 import { NetworkModule } from './network/network.module';
 import { UserModule } from './user/user.module';
+import { ContractExecutionModule } from './contract-execution/contract-execution.module';
 
 @Module({
-  imports: [AuthModule, NetworkModule, UserModule],
+  imports: [AuthModule, NetworkModule, UserModule, ContractExecutionModule],
   providers: [
     {
       provide: APP_FILTER,

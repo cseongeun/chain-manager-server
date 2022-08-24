@@ -18,7 +18,7 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<User | null> {
-    const user = await this.userService.findOne(provider, email);
+    const user = await this.userService.findOne({ provider, email });
 
     if (user) {
       if (provider == AuthProvider.LOCAL) {
@@ -51,7 +51,7 @@ export class AuthService {
     name: string,
     password: string,
   ): Promise<User> {
-    const existUser = await this.userService.findOne(provider, email);
+    const existUser = await this.userService.findOne({ provider, email });
 
     if (existUser) {
       // Error: Already exist name
