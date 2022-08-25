@@ -42,7 +42,7 @@ export class ContractExecutionController {
 
     const contractExecution = await this.contractExecutionService.findOne({
       user: req.user,
-      id,
+      id: parseInt(id),
     });
 
     return new ContractExecutionDTO(contractExecution);
