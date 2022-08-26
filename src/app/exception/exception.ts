@@ -87,6 +87,6 @@ export class CustomAccessDeniedException extends Exception {
  */
 export class CustomUnAuthorizedException extends Exception {
   constructor() {
-    super(EXCEPTION_CODE.ERR0008, HttpStatus.UNAUTHORIZED);
+    super(EXCEPTION_CODE.ERR0006, HttpStatus.UNAUTHORIZED);
   }
 }

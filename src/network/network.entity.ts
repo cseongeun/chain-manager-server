@@ -14,6 +14,9 @@ export class Network {
   @Column({ type: 'varchar', length: 100, nullable: false })
   currency: string;
 
+  @Column({ type: 'varchar', length: 500, nullable: false })
+  currencyLogo: string;
+
   @Column({ type: 'integer', nullable: false })
   chainId: number;
 

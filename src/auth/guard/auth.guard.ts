@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
     const user = await this.authService.validateUser(provider, email, password);
 
     if (!user) {
-      throw new Exception(EXCEPTION_CODE.ERR0006, HttpStatus.BAD_REQUEST);
+      throw new Exception(EXCEPTION_CODE.ERR0100, HttpStatus.BAD_REQUEST);
     }
 
     req.user = user;

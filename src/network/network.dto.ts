@@ -13,9 +13,13 @@ export class NetworkDTO {
     Object.assign(this, {
       id: network.id,
       name: network.name,
+      label: network.label,
       chainId: network.chainId,
       testnet: network.testnet,
       expolorer: network.explorer,
+      multicall: network.multicall,
+      currency: network.currency,
+      currencyLogo: network.currencyLogo,
     });
   }
 
@@ -25,6 +29,9 @@ export class NetworkDTO {
   @DataTransporter({ doc: { description: '네트워크 이름' } })
   public readonly name: string;
 
+  @DataTransporter({ doc: { description: '네트워크 라벨' } })
+  public readonly label: string;
+
   @DataTransporter({ doc: { description: '네트워크 체인 아이디' } })
   public readonly chainId: number;
 
@@ -33,6 +40,15 @@ export class NetworkDTO {
 
   @DataTransporter({ doc: { description: '네트워크 익스플로어' } })
   public readonly explorer: string;
+
+  @DataTransporter({ doc: { description: '네트워크 멀티콜 주소' } })
+  public readonly multicall: string;
+
+  @DataTransporter({ doc: { description: '네트워크 통화 심볼 명' } })
+  public readonly currency: string;
+
+  @DataTransporter({ doc: { description: '네트워크 통화 심볼 로고' } })
+  public readonly currencyLogo: string;
 }
 
 export class NetworkQueryDTO {

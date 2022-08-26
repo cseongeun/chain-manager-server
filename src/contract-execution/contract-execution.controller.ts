@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -9,6 +10,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
+import { isNull } from 'lodash';
 import { APIControllerExport } from '../app/decorator/controller-export.decorator';
 import { Exception } from '../app/exception/exception';
 import { EXCEPTION_CODE } from '../app/exception/exception.constant';
@@ -45,6 +47,10 @@ export class ContractExecutionController {
       id: parseInt(id),
     });
 
+    if (isNull(contractExecution)) {
+      throw new Exception(EXCEPTION_CODE.ERR0102, HttpStatus.BAD_REQUEST);
+    }
+
     return new ContractExecutionDTO(contractExecution);
   }
 
@@ -63,7 +69,7 @@ export class ContractExecutionController {
       const network = await this.networkService.findOne({ chainId });
 
       if (!network) {
-        throw new Exception(EXCEPTION_CODE.ERR0007, HttpStatus.BAD_REQUEST);
+        throw new Exception(EXCEPTION_CODE.ERR0101, HttpStatus.BAD_REQUEST);
       }
 
       condition.network = network;
@@ -96,7 +102,7 @@ export class ContractExecutionController {
     const network = await this.networkService.findOne({ chainId });
 
     if (!network) {
-      throw new Exception(EXCEPTION_CODE.ERR0007, HttpStatus.BAD_REQUEST);
+      throw new Exception(EXCEPTION_CODE.ERR0101, HttpStatus.BAD_REQUEST);
     }
 
     const contractExecution = await this.contractExecutionService.createOne({
@@ -108,5 +114,25 @@ export class ContractExecutionController {
     });
 
     return new ContractExecutionDTO(contractExecution);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @APIControllerExport(Delete(ROUTE.DELETE_DETAIL))
+  async deleteContractExecution(
+    @Request() req: IJWTGuardRequest,
+    @Param() param: ContractExecutionDetailParamDTO,
+  ) {
+    const { id } = param;
+
+    const contractExecution = await this.contractExecutionService.deleteOne({
+      user: req.user,
+      id: parseInt(id),
+    });
+
+    if (isNull(contractExecution)) {
+      throw new Exception(EXCEPTION_CODE.ERR0102, HttpStatus.BAD_REQUEST);
+    }
+
+    return true;
   }
 }

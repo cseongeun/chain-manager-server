@@ -1,9 +1,4 @@
-import {
-  IsNumber,
-  IsNumberString,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { DataTransporter } from '../app/decorator/dto-transporter.decorator';
 import { NetworkDTO } from '../network/network.dto';
 import { ContractExecution } from './contract-execution.entity';

@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { DeepPartial, Repository } from 'typeorm';
+import { DeepPartial, DeleteResult, Repository } from 'typeorm';
 import { Network } from '../network/network.entity';
 import { User } from '../user/user.entity';
 import { CONTRACT_EXECUTION_REPOSITORY_PROVIDE } from './contract-execution.constant';
@@ -42,5 +42,11 @@ export class ContractExecutionService {
     return this.contractExecutionRepository.save({
       ...params,
     });
+  }
+
+  async deleteOne(
+    params: DeepPartial<ContractExecution>,
+  ): Promise<DeleteResult> {
+    return this.contractExecutionRepository.delete({ ...params });
   }
 }
