@@ -26,6 +26,18 @@ export class MultiTransfer {
   @Column({ type: 'varchar', length: 500, nullable: false })
   tokenAddress: string;
 
+  @Column({ type: 'varchar', length: 50, nullable: false })
+  tokenSymbol: string;
+
+  @Column({ type: 'integer', nullable: false })
+  tokenDecimals: string;
+
+  @Column({ type: 'integer', nullable: false })
+  totalAddress: string;
+
+  @Column({ type: 'decimal', precision: 65, scale: 22, default: 0 })
+  totalAmount: string;
+
   @Column({ type: 'longtext', nullable: true })
   memo: string;
 

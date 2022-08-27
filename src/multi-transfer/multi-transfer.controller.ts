@@ -35,7 +35,7 @@ export class MultiTransferController {
 
   @UseGuards(JwtAuthGuard)
   @APIControllerExport(Get(ROUTE.GET_DETAIL))
-  async getContractExecution(
+  async getMultiTransfer(
     @Request() req: IJWTGuardRequest,
     @Param() param: MultiTransferDetailParamDTO,
   ) {
@@ -55,16 +55,17 @@ export class MultiTransferController {
 
   @UseGuards(JwtAuthGuard)
   @APIControllerExport(Get())
-  async getContractExecutions(
+  async getMultiTransfers(
     @Request() req: IJWTGuardRequest,
     @Query() query: MultiTransferQueryDTO,
   ) {
-    const { chainId, tokenAddress, hash } = query;
+    const { chainId, tokenAddress, hash, tokenSymbol } = query;
 
     const condition: {
       network?: Network;
       tokenAddress?: string;
       hash?: string;
+      tokenSymbol?: string;
     } = {};
 
     if (chainId) {
@@ -81,24 +82,31 @@ export class MultiTransferController {
       condition.tokenAddress = tokenAddress;
     }
 
+    if (tokenAddress) {
+      condition.tokenSymbol = tokenSymbol;
+    }
+
     if (hash) {
       condition.hash = hash;
     }
+
+    console.log('here');
 
     const multiTransfers = await this.multiTransferService.findAll({
       user: req.user,
       ...condition,
     });
+    console.log(multiTransfers);
     return multiTransfers.map((r) => new MultiTransferDTO(r));
   }
 
   @UseGuards(JwtAuthGuard)
   @APIControllerExport(Post())
-  async createContractExecution(
+  async createMultiTransfer(
     @Request() req: IJWTGuardRequest,
     @Body() body: CreateMultiTransferBodyDTO,
   ) {
-    const { chainId, tokenAddress, memo, hash, histories } = body;
+    const { chainId, tokenAddress, memo, hash, tokenSymbol, histories } = body;
 
     const network = await this.networkService.findOne({ chainId });
 
@@ -106,14 +114,18 @@ export class MultiTransferController {
       throw new Exception(EXCEPTION_CODE.ERR0101, HttpStatus.BAD_REQUEST);
     }
 
-    const multiTransfer = await this.multiTransferService.createOne({
-      user: req.user,
-      network,
-      tokenAddress,
-      hash,
-      memo,
-      histories,
-    });
+    const multiTransfer =
+      await this.multiTransferService.createOneWithHistories(
+        {
+          user: req.user,
+          network,
+          tokenAddress,
+          tokenSymbol,
+          hash,
+          memo,
+        },
+        histories,
+      );
 
     return new MultiTransferDTO(multiTransfer);
   }
