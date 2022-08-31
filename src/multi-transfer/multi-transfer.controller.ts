@@ -90,13 +90,10 @@ export class MultiTransferController {
       condition.hash = hash;
     }
 
-    console.log('here');
-
     const multiTransfers = await this.multiTransferService.findAll({
       user: req.user,
       ...condition,
     });
-    console.log(multiTransfers);
     return multiTransfers.map((r) => new MultiTransferDTO(r));
   }
 

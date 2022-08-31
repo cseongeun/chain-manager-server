@@ -25,7 +25,6 @@ export class AllExceptionFilter implements ExceptionFilter {
 
     let resData: Exception;
 
-    console.log(exception.constructor);
     switch (exception.constructor) {
       case Exception: {
         resData = exception as Exception;
