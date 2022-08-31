@@ -2,11 +2,11 @@ import { DataSource } from 'typeorm';
 
 const dataSource = new DataSource({
   type: 'mysql',
-  host: '127.0.0.1',
-  port: 3306,
-  username: 'root',
-  password: 'qwer1234',
-  database: 'chain_manager',
+  host: process.env.MYSQL_HOST,
+  port: parseInt(process.env.MYSQL_PORT as string),
+  username: process.env.MYSQL_USERNAME,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
   migrations: ['migrations/*.ts'],
   entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
   synchronize: false,
